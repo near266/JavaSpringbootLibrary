@@ -8,12 +8,11 @@
 #COPY --from=build /app/LibraryJavaBe/target/LibraryJavaBe-0.0.1-SNAPSHOT.jar app.jar
 #EXPOSE 8080
 #CMD ["java", "-jar", "app.jar"]
-FROM maven:3.9.2-eclipse-temurin-17-alpine as builder
-
-COPY ./src src/
-COPY ./pom.xml pom.xml
-
-RUN mvn clean package -DskipTests
+FROM ubuntu:lastest AS build
+RUN apt-get update
+RUN apt-get install openjdk-17-jdk -y
+RUN apt-get install maven -y
+RUN mvn clean install
 # Sử dụng OpenJDK 11 (hoặc phiên bản phù hợp)
 FROM openjdk:17-slim
 
