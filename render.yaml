@@ -1,0 +1,54 @@
+services:
+  - name: db_postgres
+    plan: starter
+    environment:
+      - POSTGRES_USER=fitolab
+      - POSTGRES_PASSWORD=kV5<xV0+pF0%kM4<
+      - POSTGRES_DB=Library
+    ports:
+      - internal: 5432
+    start_command: docker run -p 5432:5432 -e POSTGRES_USER=fitolab -e POSTGRES_PASSWORD=kV5<xV0+pF0%kM4< -e POSTGRES_DB=Library postgres
+    env: {}
+    env_secrets: []
+    health_check:
+      http_endpoint: ''
+      tcp_port: 5432
+      tcp_delay: 10
+      tcp_timeout: 30
+      http_method: GET
+      location: ''
+    preemptible: false
+    autodeploy: true
+    cloud: render
+    build_command: ''
+    build_directory: ''
+    dockerfile_path: ''
+    source: ''
+    secrets: []
+
+  - name: app_library
+    plan: starter
+    environment:
+      - url=jdbc:postgresql://124.158.4.180:5432/Library
+      - username=fitolab
+      - password=kV5<xV0+pF0%kM4<
+    ports:
+      - internal: 8080
+    start_command: java -jar app.jar
+    env: {}
+    env_secrets: []
+    health_check:
+      http_endpoint: ''
+      tcp_port: 8080
+      tcp_delay: 10
+      tcp_timeout: 30
+      http_method: GET
+      location: ''
+    preemptible: false
+    autodeploy: true
+    cloud: render
+    build_command: ''
+    build_directory: ''
+    dockerfile_path: ''
+    source: '.'
+    secrets: []
