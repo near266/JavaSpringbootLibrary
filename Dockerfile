@@ -8,7 +8,7 @@
 #COPY --from=build /app/LibraryJavaBe/target/LibraryJavaBe-0.0.1-SNAPSHOT.jar app.jar
 #EXPOSE 8080
 #CMD ["java", "-jar", "app.jar"]
-FROM ubuntu:lastest AS build
+FROM ubuntu:lastest AS buildler
 RUN apt-get update
 RUN apt-get install openjdk-17-jdk -y
 RUN apt-get install maven -y
@@ -20,10 +20,10 @@ FROM openjdk:17-slim
 WORKDIR /app
 
 # Sao chép file JAR Spring Boot vào thư mục làm việc
-COPY /target/LibraryJavaBe-0.0.1-SNAPSHOT.jar /app
+COPY --from=builder target/*.jar app.jar
 
 # Mở cổng 8080 của container
 EXPOSE 8080
 
 # Lệnh khởi chạy ứng dụng Spring Boot khi container được khởi động
-CMD ["java", "-jar", "LibraryJavaBe-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "app.jar"]
