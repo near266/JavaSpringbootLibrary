@@ -1,0 +1,31 @@
+version: '3.1'
+services:
+  db:
+    container_name: db_postgres
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=fitolab
+      - POSTGRES_PASSWORD=kV5<xV0+pF0%kM4<
+      - POSTGRES_DB=Library
+    networks:
+      - app-network
+    restart: always
+  backend:
+    container_name: app_library
+    build: .
+    ports:
+      - 8099:8080
+    environment:
+      url: jdbc:postgresql://124.158.4.180:5432/Library
+      username: fitolab
+      password: kV5<xV0+pF0%kM4<
+    depends_on:
+      - db
+    restart: always
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge

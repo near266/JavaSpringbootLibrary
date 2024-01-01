@@ -1,18 +1,22 @@
 spring:
   datasource:
     url: jdbc:postgresql://124.158.4.180:5432/Library
-    username: dev_x
-    password: n1*l98Q525&
+    username: fitolab
+    password: kV5<xV0+pF0%kM4<
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-
-
+#
+#application:
+#  security:
+#    jwt:
+#      refresh-token:
+#       expiration: 843000

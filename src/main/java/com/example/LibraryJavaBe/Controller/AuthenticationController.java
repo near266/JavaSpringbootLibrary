@@ -4,9 +4,18 @@ import com.example.LibraryJavaBe.Request.AuthenticaionRequest;
 import com.example.LibraryJavaBe.Response.AuthenticationResponse;
 import com.example.LibraryJavaBe.Response.RegisterRequest;
 import com.example.LibraryJavaBe.authService.AuthenticationService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -28,6 +37,19 @@ public class AuthenticationController {
 
     ){
          return  ResponseEntity.ok(service.authenticate(request));
+
+
+    }
+
+    @PostMapping("/refeshToken")
+
+    public void refreshToken(
+            HttpServletRequest request,
+            HttpServletResponse response
+
+    ) throws IOException {
+
+        service.refeshToken(request, response);
 
 
     }
