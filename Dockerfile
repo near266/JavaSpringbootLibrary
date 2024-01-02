@@ -14,7 +14,7 @@ RUN apt-get install openjdk-17-jdk -y
 RUN apt-get install maven -y
 RUN mvn clean install
 # Sử dụng OpenJDK 11 (hoặc phiên bản phù hợp)
-FROM openjdk:17-slim
+FROM openjdk:17
 
 # Thiết lập thư mục làm việc trong container
 WORKDIR /app
