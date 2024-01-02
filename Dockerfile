@@ -9,7 +9,7 @@
 #EXPOSE 8080
 #CMD ["java", "-jar", "app.jar"]
 FROM maven:3.8.5-openjdk-17 AS build
-COPY . .
+COPY .
 RUN mvn clean package -DskipTests
 FROM openjdk:17.0.1-jdk-slim
 
@@ -17,8 +17,7 @@ FROM openjdk:17.0.1-jdk-slim
 WORKDIR /app
 
 # Sao chép file JAR Spring Boot vào thư mục làm việc
-COPY /target/LibraryJavaBe-0.0.1-SNAPSHOT.jar /app
-
+COPY --from=build /target/LibraryJavaBe-0.0.1-SNAPSHOT.jar app.jar
 # Mở cổng 8080 của container
 EXPOSE 8080
 
