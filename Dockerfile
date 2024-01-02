@@ -17,7 +17,7 @@ FROM openjdk:17.0.1-jdk-slim
 WORKDIR /app
 
 # Sao chép file JAR Spring Boot vào thư mục làm việc
-COPY --from=builder target/*.jar app.jar
+COPY --from=build target/*.jar app.jar
 
 # Mở cổng 8080 của container
 EXPOSE 8080
