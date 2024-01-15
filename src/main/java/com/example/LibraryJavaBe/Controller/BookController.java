@@ -163,7 +163,7 @@ public class BookController {
                     .price(book.getPrice())
                     .publisher(book.getPublisher())
                     .isbn(book.getIsbn())
-                    .cateRes(cate)
+                    .categoryName(cate)
 
 
                     .build();
