@@ -18,13 +18,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = " UserTable")
+@Table(name = " Usertbl")
 public class User implements UserDetails {
     @Id
     @GeneratedValue
     private Integer id;
-    private String firstname;
-    private String lastname;
+    private String fullname;
+    private String phonenumber;
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
@@ -38,7 +38,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return phonenumber;
     }
 
     @Override

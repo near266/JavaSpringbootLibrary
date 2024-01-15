@@ -32,8 +32,8 @@ public class AuthenticationService {
     private final TokenRepository tokenRepository;
     public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
-                .firstname(request.getFistname())
-                .lastname(request.getLastname())
+                .fullname(request.getFullname())
+                .phonenumber(request.getPhonenumber())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
@@ -73,11 +73,11 @@ private void revokeAllsUserToken(User user){
     public AuthenticationResponse authenticate(AuthenticaionRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
+                        request.getPhonenumber(),
                         request.getPassword()
                 )
         );
-        var user =repository.findByEmail(request.getEmail())
+        var user =repository.findByPhonenumber(request.getPhonenumber())
                 .orElseThrow();
         var jwtToken= jwtService.generateToken(user);
         var refreshToken=jwtService.generateRefreshToken(user)  ;
@@ -101,7 +101,7 @@ private void revokeAllsUserToken(User user){
         refreshToken=authHeader.substring(7);
         userEmail = jwtService.extractUsername(refreshToken);
         if(userEmail !=null ){
-            var user = this.repository.findByEmail(userEmail).orElseThrow();
+            var user = this.repository.findByPhonenumber(userEmail).orElseThrow();
 
             if(jwtService.isTokenValid(refreshToken,user)){
                var accessToken=jwtService.generateToken(user);
