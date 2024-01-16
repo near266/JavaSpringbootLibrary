@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -42,9 +43,15 @@ public class CateService implements ICategorySvc {
     }
 
     @Override
-    public Set<Book> getBooksByCategoryName(String categoryname) {
-        Category category = _repo.findByName(categoryname);
-        return  null;
+    public List<Category> getBooksByCategoryName(String name) {
+        List<Category> category = _repo.findByName(name);
+//        var res=  category.getBooks();
+        if (category != null) {
+            return category;
+        } else {
+            // Xử lý khi không tìm thấy category
+            return category; // hoặc có thể trả về null hoặc ném một exception tùy thuộc vào yêu cầu của bạn.
+        }
     }
 
     @Override

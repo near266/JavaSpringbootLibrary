@@ -3,6 +3,7 @@ package com.example.LibraryJavaBe.BookService.InterfaceSvc;
 import com.example.LibraryJavaBe.BookService.Entities.Book;
 import com.example.LibraryJavaBe.BookService.Entities.Category;
 import com.example.LibraryJavaBe.BookService.Entities.tbl_uploadfile;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ public interface IBookSvc {
 
     Book AddBookToCategory(Long idCate ,Long idBook);
     List<Category> getCategoriesByBookId(Long bookId);
+    List<Book> findBooksByCategoryName(String categoryName);
 
 
 }

@@ -6,6 +6,8 @@ import com.example.LibraryJavaBe.BookService.InterfaceSvc.IBookSvc;
 import com.example.LibraryJavaBe.BookService.Repository.BookRepo;
 import com.example.LibraryJavaBe.BookService.Repository.CategoryRepo;
 import com.example.LibraryJavaBe.Exception.ResourceNotFoundException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BookService implements IBookSvc {
     private  final BookRepo repo;
-
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public Book AddBook(Book book) throws SQLException, IOException {
@@ -90,5 +93,15 @@ public class BookService implements IBookSvc {
             return (List<Category>) book.getCategories();
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public List<Book> findBooksByCategoryName(String categoryName) {
+
+        List<Book> bks= entityManager.createQuery(
+                            "SELECT b FROM Book b JOIN b.categories c WHERE c.name = :categoryName", Book.class)
+                    .setParameter("categoryName", categoryName)
+                    .getResultList();
+return  bks;
     }
 }

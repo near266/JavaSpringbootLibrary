@@ -30,6 +30,11 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
+    public Integer getUserId(String phone){
+        var user =repository.findByPhonenumber(phone)
+                .orElseThrow();
+        return user.getId();
+    }
     public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
                 .fullname(request.getFullname())

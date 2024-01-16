@@ -17,6 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Table(name = "Category")
 
 public class Category extends BaseEntity{
     private String name;

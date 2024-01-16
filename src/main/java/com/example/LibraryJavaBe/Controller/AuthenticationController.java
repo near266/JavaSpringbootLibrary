@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -22,6 +23,21 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AuthenticationController {
     private  final AuthenticationService service;
+    @GetMapping("/current-user")
+    public String getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return "Current User: " + authentication.getName();
+
+
+    }
+    @GetMapping("/current-userId")
+    public Integer getCurrentUserID() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+       return service.getUserId(authentication.getName());
+
+
+
+    }
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request

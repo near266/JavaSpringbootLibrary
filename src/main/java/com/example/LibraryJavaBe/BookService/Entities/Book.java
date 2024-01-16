@@ -1,20 +1,18 @@
 package com.example.LibraryJavaBe.BookService.Entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Getter
-@Setter
+@Data
 @ToString
 
 @Table(name = "books")
@@ -39,6 +37,14 @@ public class Book extends  BaseEntity{
         @ToString.Exclude
         @JsonIgnore
         private Set<Category> categories;
+        @OneToMany(mappedBy = "book")
+        @JsonIgnore
+
+        private Set<Book_BorrowerCard> bookCards;
+        @OneToMany(mappedBy = "book")
+        @JsonIgnore
+
+        private Set<BorrowerSlip_Book> borrowerSlip_books;
 
 
 }

@@ -3,22 +3,19 @@ package com.example.LibraryJavaBe.BookService.Entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
-@Data
 @Builder
-@Setter
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Cate_book")
-public class Cate_Book {
+
+@Table(name = "HandmadeItem")
+public class HandmadeItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Long BookId ;
-    private Long CateId;
-
+    private Integer itemId;
+    private String itemName;
+    private  Double price;
+    private  Integer quantity;
+    private String imgUrl;
 }

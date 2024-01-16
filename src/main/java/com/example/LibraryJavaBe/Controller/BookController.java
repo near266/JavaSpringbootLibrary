@@ -1,15 +1,11 @@
 package com.example.LibraryJavaBe.Controller;
 
 import com.example.LibraryJavaBe.BookService.Entities.Book;
-import com.example.LibraryJavaBe.BookService.Entities.Cate_Book;
 import com.example.LibraryJavaBe.BookService.Entities.Category;
 import com.example.LibraryJavaBe.BookService.InterfaceSvc.IBookSvc;
 import com.example.LibraryJavaBe.BookService.Service.BookService;
-import com.example.LibraryJavaBe.BookService.Service.CateBookService;
 import com.example.LibraryJavaBe.BookService.Service.CateService;
 import com.example.LibraryJavaBe.BookService.Service.UploadService;
-import com.example.LibraryJavaBe.Request.AddBookrq;
-import com.example.LibraryJavaBe.Response.CateRes;
 import com.example.LibraryJavaBe.Response.UploadFileResponse;
 import com.example.LibraryJavaBe.Response.bookResponse;
 import lombok.Builder;
@@ -26,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
-import java.sql.Array;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.*;
@@ -38,7 +33,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequestMapping("/api/v1/book")
 public class BookController {
-    private final IBookSvc bookSvc;
+
     private final BookService bookService;
     private final UploadService uploadFileService;
 
@@ -47,6 +42,29 @@ public class BookController {
     @GetMapping("test")
     public ResponseEntity<String> sayHello(){
         return  ResponseEntity.ok("Hello");
+    }
+    @GetMapping("/getBookByCategoryName/{Name}")
+    public ResponseEntity<List<bookResponse>> getBookByCategoryName(@RequestParam String Name){
+        var res = new ArrayList<bookResponse>();
+        var rq = bookService.getAllBook();
+        for (Book b : rq){
+
+            var book = GetBookDetailMetod(b.getId());
+            res.add(book);
+        }
+         var rlt= new ArrayList<bookResponse>();
+           for (bookResponse bookres : res){
+               if(bookres.getCategoryName().contains(Name)){
+                   rlt.add(bookres);
+
+               }
+           }
+
+//        var books = cateService.getBooksByCategoryName(Name);
+//        var res = new ArrayList<bookResponse>();
+////
+
+        return  ResponseEntity.ok(rlt);
     }
 
     @PostMapping("/addbook")
@@ -236,24 +254,5 @@ public ResponseEntity<bookResponse> Update(
         return ResponseEntity.ok(true);
 
     }
-//    private bookResponse getBookResponse(Book book) {
-////        List<BookedRoom> bookings = getAllBookingsByRoomId(room.getId());
-////        List<BookingResponse> bookingInfo = bookings
-////                .stream()
-////                .map(booking -> new BookingResponse(booking.getBookingId(),
-////                        booking.getCheckInDate(),
-////                        booking.getCheckOutDate(), booking.getBookingConfirmationCode())).toList();
-//        byte[] photoBytes = null;
-//        Blob photoBlob = book.getImg();
-//        if (photoBlob != null) {
-//            try {
-//                photoBytes = photoBlob.getBytes(1, (int) photoBlob.length());
-//            } catch (SQLException e) {
-//                throw new PhotoRetrievalException("Error retrieving photo");
-//            }
-//        }
-//        return new bookResponse(book.getId(),
-//                book.getTitle(),photoBytes, book.getAuthor(),
-//                book.getIsbn(), book.getPublisher(),book.getPrice(),book.getCreatedAt(),book.getUpdatedAt());
-//    }
+
 }

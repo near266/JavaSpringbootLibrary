@@ -12,6 +12,6 @@ public interface ICategorySvc {
      Category UpdateCate(Category category);
      Optional<List<Category>> GetAllCate();
      boolean DeleteCate(Long id);
-     Set<Book> getBooksByCategoryName(String categoryname);
+     List<Category> getBooksByCategoryName(String categoryname);
      Category GetByid(Long id);
 }
