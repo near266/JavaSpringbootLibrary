@@ -21,12 +21,16 @@ public class Book extends  BaseEntity{
         @Lob
         @Column(name = "Image", length = Integer.MAX_VALUE, nullable = true)
         private String img;
+        private String name;
         private String author;
         //ma sach quoc te
         private String isbn;
         //nha xuat ban
         private String publisher;
-        private Double price;
+
+        private Integer quantityTotal;
+        private Integer quantityAvailabel;
+
         @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
 
         @JoinTable(

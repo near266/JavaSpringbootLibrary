@@ -7,10 +7,10 @@ import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,5 +27,17 @@ public class CategoryController {
         var res = service.AddCate(cate);
         return  ResponseEntity.ok(res);
 
+    }
+    @GetMapping("/getcateName")
+    public ResponseEntity<List<AddCateRq>> getCate(){
+        var cate = service.GetAllCate().orElse(null);
+        var res = new ArrayList<AddCateRq>();
+        for (Category c: cate) {
+            AddCateRq a = new AddCateRq();
+            a.setName(c.getName());
+            a.setId(c.getId());
+            res.add(a);
+        }
+        return ResponseEntity.ok(res);
     }
 }

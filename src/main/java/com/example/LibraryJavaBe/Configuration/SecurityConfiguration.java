@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
 
@@ -32,8 +33,9 @@ public class SecurityConfiguration {
             "/v3/api-docs.yaml",
             "/swagger-ui/**",
             "/swagger-ui.html",
-            "/api/v1/book/**"
-
+            "/api/v1/book/**",
+          "/api/v1/category/**",
+            "/api/v1/Cart/**"
 
     };
 
@@ -41,6 +43,7 @@ public class SecurityConfiguration {
      public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(crfs->crfs.disable())
+
                 .authorizeHttpRequests(
                         rq->rq.requestMatchers(AUTH_WHITELIST)
                                 .permitAll().anyRequest()
@@ -56,19 +59,46 @@ http.authenticationProvider(authenticationProvider)
                         .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
         )
 ;
+
         return http.build();
     }
+//    @Bean
+// CorsConfigurationSource corsConfigurationSource() {
+//    CorsConfiguration configuration = new CorsConfiguration();
+//     configuration.setAllowedOrigins(List.of("http://localhost:8085"));
+//     configuration.addAllowedOrigin("*");
+//      configuration.setAllowedMethods(List.of("GET","POST"));
+//    configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
+//        configuration.addAllowedOrigin("http://localhost:5173"); // Thay đổi port nếu ứng dụng React của bạn chạy trên cổng khác
+//
+//        configuration.addAllowedMethod("*");
+//        configuration.addAllowedHeader("*");
+//    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//
+//  source.registerCorsConfiguration("/**",configuration);
+//
+//   return source;
+//}
+@Configuration
+public class CorsConfig {
+
     @Bean
- CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
-     configuration.setAllowedOrigins(List.of("http://localhost:8081"));
-      configuration.setAllowedMethods(List.of("GET","POST"));
-    configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:8085", "http://localhost:5173"));
+        configuration.setAllowedMethods(List.of("GET", "POST"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true); // Nếu cần sử dụng credentials (ví dụ: cookie), hãy đặt true
 
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
 
-  source.registerCorsConfiguration("/**",configuration);
+        return source;
+    }
 
-   return source;
+    @Bean
+    public CorsFilter corsFilter() {
+        return new CorsFilter(corsConfigurationSource());
+    }
 }
 }

@@ -42,6 +42,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
+
                 .build();
        var savedUser= repository.save(user);
         var jwtToken= jwtService.generateToken(user);
@@ -49,6 +50,26 @@ public class AuthenticationService {
         saveUserToken(savedUser, jwtToken);
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
+                .role(user.getRole().name())
+                .refreshToken(refreshToken)
+                .build();
+    }
+    public AuthenticationResponse registerAdmin(RegisterRequest request) {
+        var user = User.builder()
+                .fullname(request.getFullname())
+                .phonenumber(request.getPhonenumber())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.ADMIN)
+                .build();
+        var savedUser= repository.save(user);
+        var jwtToken= jwtService.generateToken(user);
+        var refreshToken=jwtService.generateRefreshToken(user);
+        saveUserToken(savedUser, jwtToken);
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .role(user.getRole().name())
+
                 .refreshToken(refreshToken)
                 .build();
     }
@@ -92,6 +113,9 @@ private void revokeAllsUserToken(User user){
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
+                .role(user.getRole().name())
+                .userId(user.getId())
+
                 .build();
 
     }

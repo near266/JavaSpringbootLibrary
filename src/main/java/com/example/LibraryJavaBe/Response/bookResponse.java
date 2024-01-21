@@ -25,15 +25,16 @@ public class bookResponse {
     private Long Id;
 
     private String title;
-
+    private String name;
     private String img;
     private String author;
     //ma sach quoc te
     private String isbn;
     //nha xuat ban
     private String publisher;
-    private Double price;
+    private Integer quantityTotal;
 
+    private Integer quantityAvailabel;
 
 
     private LocalDateTime createdAt;

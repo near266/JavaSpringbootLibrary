@@ -6,6 +6,7 @@ import com.example.LibraryJavaBe.BookService.Service.CartAndBorrowService;
 import com.example.LibraryJavaBe.Request.CardRequest.BorrowCardRequest;
 import com.example.LibraryJavaBe.Response.CardRes;
 import com.example.LibraryJavaBe.Response.ResgisterBorrowForm;
+import com.example.LibraryJavaBe.Response.bookResponse;
 import com.example.LibraryJavaBe.authService.AuthenticationService;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -72,8 +74,8 @@ private final BookService _bookService;
         return  ResponseEntity.ok(res);
     }
     @GetMapping("GetAllCardByUserId")
-    public ResponseEntity<CardRes> GetAllCardByUserId(){
-        var res = _cartAndBorrowService.GetAllCardUserId(getCurrentUserID());
+    public ResponseEntity<CardRes> GetAllCardByUserId(@RequestParam("userId") Integer userId){
+        var res = _cartAndBorrowService.GetAllCardUserId(userId);
         Integer tl =0;
         for(Book_BorrowerCard bb : res){
             tl+= bb.getQuantity();
@@ -87,16 +89,37 @@ private final BookService _bookService;
 
         return  ResponseEntity.ok(result);
     }
+    @GetMapping("GetAllBookCardByUserId")
+    public ResponseEntity<List<bookResponse>> GetAllBookCardByUserId(@RequestParam("userId") Integer userId){
+        var res = _cartAndBorrowService.GetAllCardUserId(userId);
+            var book =new ArrayList<Book>();
+            var result= new ArrayList<bookResponse>();
+            for (Book_BorrowerCard c : res){
+
+                book.add(c.getBook());
+                var book1 =  bookResponse.builder()
+                        .Id(c.getBook().getId())
+                        .img(c.getBook().getImg())
+                        .name(c.getBook().getName())
+                        .quantityTotal(c.getQuantity())
+                        .build();
+                result.add(book1);
+
+            }
+
+
+
+        return  ResponseEntity.ok(result);
+    }
     @GetMapping("test")
     public ResponseEntity<String> sayHello(){
         return  ResponseEntity.ok("Hello");
     }
 
     @PostMapping("/AddCardBorrwer")
-    public ResponseEntity<Integer> AddCardBorrwer( @RequestParam("bookid") Long BookId,@RequestParam("quantity") Integer quantity ){
-        var userid = getCurrentUserID();
+    public ResponseEntity<Integer> AddCardBorrwer(@RequestParam("userId") Integer userId, @RequestParam("bookid") Long BookId,@RequestParam("quantity") Integer quantity ){
         BorrowerCard card = BorrowerCard.builder()
-                .UserId(userid)
+                .UserId(userId)
                 .build();
       var cardSave=  _cartAndBorrowService.AddBorrowerCard(card);
       var book = _bookService.getBookById(BookId);

@@ -26,7 +26,6 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
-
 @RestController
 @RequiredArgsConstructor
 @Builder
@@ -70,6 +69,7 @@ public class BookController {
     @PostMapping("/addbook")
     public ResponseEntity<bookResponse> AddBook(
             @RequestParam("title") String title,
+            @RequestParam("name")  String name,
             @RequestParam("img")  MultipartFile img,
             @RequestParam("author")
             String author,
@@ -77,8 +77,10 @@ public class BookController {
             String isbn,
             @RequestParam("publisher")
             String publisher,
-            @RequestParam("price")
-            Double price,
+            @RequestParam("quantityTotal")
+            Integer qquantityTotal,
+            @RequestParam("quantityAvailabel")
+            Integer quantityAvailabel,
             @RequestParam("Cateid")
             List<Long> Cateid
     ) throws SQLException, IOException {
@@ -92,10 +94,12 @@ public class BookController {
       });
         Book book = Book.builder()
                 .title(title)
+                .name(name)
                 .author(author)
                 .img(link.getFileLink())
                 .isbn(isbn)
-                .price(price)
+                .quantityTotal(qquantityTotal)
+                .quantityAvailabel(quantityAvailabel)
                 .publisher(publisher)
                 .build();
         book.setCategories(categories);
@@ -158,7 +162,7 @@ public class BookController {
     public List<UploadFileResponse> uploadMultiFiles(@RequestPart List<MultipartFile> files) {
         return files.stream().map(this::uploadFile).collect(Collectors.toList());
     }
-    @GetMapping ("/getdetail/{id}")
+    @GetMapping ("/getdetail")
         public ResponseEntity<bookResponse> GetDetailBook(Long id){
 
         var res = GetBookDetailMetod(id);
@@ -174,13 +178,16 @@ public class BookController {
                     .builder()
                     .Id(book.getId())
                     .title(book.getTitle())
+                    .name(book.getName())
                     .img(book.getImg())
                     .author(book.getAuthor())
                     .updatedAt(book.getUpdatedAt())
                     .createdAt((book.getCreatedAt()))
-                    .price(book.getPrice())
+                    .quantityTotal(book.getQuantityTotal())
+                    .quantityAvailabel(book.getQuantityAvailabel())
                     .publisher(book.getPublisher())
                     .isbn(book.getIsbn())
+
                     .categoryName(cate)
 
 
@@ -215,6 +222,7 @@ public class BookController {
 public ResponseEntity<bookResponse> Update(
         @RequestParam("id") Long id,
         @RequestParam("title") String title,
+        @RequestParam("name")  String name,
         @RequestParam("img")  MultipartFile img,
         @RequestParam("author")
         String author,
@@ -222,8 +230,10 @@ public ResponseEntity<bookResponse> Update(
         String isbn,
         @RequestParam("publisher")
         String publisher,
-        @RequestParam("price")
-        Double price,
+        @RequestParam("quantityTotal")
+        Integer qquantityTotal,
+        @RequestParam("quantityAvailabel")
+        Integer quantityAvailabel,
          @RequestParam("Cateid")
         List<Long> Cateid
 ) throws SQLException, IOException {
@@ -237,10 +247,12 @@ public ResponseEntity<bookResponse> Update(
     Book rq = Book.builder()
 
             .title(title)
+            .name(name)
             .author(author)
             .img(link.getFileLink())
             .isbn(isbn)
-            .price(price)
+            .quantityTotal(qquantityTotal)
+            .quantityAvailabel(quantityAvailabel)
             .publisher(publisher)
             .build();
    rq.setCategories(categories);
@@ -248,7 +260,7 @@ public ResponseEntity<bookResponse> Update(
     var res = GetBookDetailMetod(up.getId());
     return ResponseEntity.ok(res);
 }
-@DeleteMapping("deleteBook")
+@PostMapping("deleteBook")
     public  ResponseEntity<Boolean> DeleteBook(@RequestParam Long id){
         bookService.deleteBook(id);
         return ResponseEntity.ok(true);

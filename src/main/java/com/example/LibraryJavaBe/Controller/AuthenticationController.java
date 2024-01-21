@@ -1,6 +1,7 @@
 package com.example.LibraryJavaBe.Controller;
 
 import com.example.LibraryJavaBe.Request.AuthenticaionRequest;
+import com.example.LibraryJavaBe.Request.CategoryRequest.AddCateRq;
 import com.example.LibraryJavaBe.Response.AuthenticationResponse;
 import com.example.LibraryJavaBe.Response.RegisterRequest;
 import com.example.LibraryJavaBe.authService.AuthenticationService;
@@ -24,9 +25,11 @@ import java.io.IOException;
 public class AuthenticationController {
     private  final AuthenticationService service;
     @GetMapping("/current-user")
-    public String getCurrentUser() {
+    public ResponseEntity<AddCateRq> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return "Current User: " + authentication.getName();
+        var res  = new AddCateRq();
+        res.setName(authentication.getName());
+        return ResponseEntity.ok(res);
 
 
     }
@@ -44,6 +47,15 @@ public class AuthenticationController {
 
     ){
         return  ResponseEntity.ok(service.register(request));
+
+    }
+    @PostMapping("/registerAdmin")
+
+    public ResponseEntity<AuthenticationResponse> AdminResgister(
+            @RequestBody RegisterRequest request
+
+    ){
+        return  ResponseEntity.ok(service.registerAdmin(request));
 
     }
     @PostMapping("/authenticate")
